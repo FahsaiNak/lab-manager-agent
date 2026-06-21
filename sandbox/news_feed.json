@@ -1,0 +1,29 @@
+{
+  "_comment": "SYNTHETIC DEMO DATA — fictional papers, sources, and URLs invented for the News Scout sub-agent demo. None of this describes any real publication.",
+  "items": [
+    {
+      "id": "paper-001",
+      "title": "Synthetic Demo: Distal Loop Dynamics Modulate bnAb Access to a Model Epitope",
+      "source": "Demo Journal of Computational Immunology (fictional)",
+      "url": "https://example.invalid/demo/paper-001",
+      "snippet": "Fictional demo finding: in a synthetic MD study, a distal loop conformation correlated with altered antibody-binding-site exposure on a model HIV Env-like antigen.",
+      "tags": ["molecular dynamics", "HIV Env", "bnAb design"]
+    },
+    {
+      "id": "paper-002",
+      "title": "Synthetic Demo: A Coarse-Grained Approach to Membrane Protein Folding",
+      "source": "Demo Biophysics Letters (fictional)",
+      "url": "https://example.invalid/demo/paper-002",
+      "snippet": "Fictional demo finding, deliberately unrelated to the lab's interest tags — used to test negative filtering in search_papers.",
+      "tags": ["membrane proteins", "coarse-grained simulation"]
+    },
+    {
+      "id": "paper-003",
+      "title": "Synthetic Demo: Affinity Maturation Trajectories Under Permissive Selection",
+      "source": "Demo Frontiers Reports (fictional)",
+      "url": "https://example.invalid/demo/paper-003",
+      "snippet": "Fictional demo finding: ties germinal center selection stringency to bnAb lineage outcomes.",
+      "tags": ["bnAb design", "germinal center", "affinity maturation"]
+    }
+  ]
+}
