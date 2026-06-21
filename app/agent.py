@@ -15,12 +15,9 @@
 
 from google.adk.apps import App
 
-from app.sub_agents.storage_steward import create_storage_steward
+from app.orchestrator import create_orchestrator
 
-# Root agent is the Storage Steward for now. The orchestrator (with
-# Knowledge Curator and News Scout as additional sub_agents) is wired in
-# Task #6, once those sub-agents exist.
-root_agent = create_storage_steward()
+root_agent = create_orchestrator()
 
 app = App(
     root_agent=root_agent,

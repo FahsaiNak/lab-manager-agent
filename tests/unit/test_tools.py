@@ -24,8 +24,8 @@ def _touch(path, age_days, owner=None):
 
 
 def test_scan_filesystem_flags_stale_dirs(tmp_path):
-    _touch(tmp_path / "proj/userA/old/file.txt", age_days=120, owner="userA")
-    _touch(tmp_path / "proj/userA/recent/file.txt", age_days=10, owner="userA")
+    _touch(tmp_path / "proj/user1/old/file.txt", age_days=120, owner="user1")
+    _touch(tmp_path / "proj/user1/recent/file.txt", age_days=10, owner="user1")
 
     result = tools.scan_filesystem(str(tmp_path))
     stale = [e for e in result["entries"] if e["is_stale"]]
@@ -33,7 +33,7 @@ def test_scan_filesystem_flags_stale_dirs(tmp_path):
 
     assert len(stale) == 1
     assert len(fresh) == 1
-    assert stale[0]["owner"] == "userA"
+    assert stale[0]["owner"] == "user1"
 
 
 def test_find_unauthorized_writes_detects_anomaly(tmp_path, monkeypatch):

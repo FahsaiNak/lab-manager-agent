@@ -12,7 +12,9 @@ class _FakeTool:
 
 @pytest.mark.asyncio
 async def test_blocks_execute_archive_without_confirm():
-    result = await require_confirmation(_FakeTool("execute_archive_plan"), {}, tool_context=None)
+    result = await require_confirmation(
+        _FakeTool("execute_archive_plan"), {}, tool_context=None
+    )
     assert result["status"] == "blocked"
 
 
@@ -26,5 +28,7 @@ async def test_allows_execute_archive_with_confirm():
 
 @pytest.mark.asyncio
 async def test_other_tools_pass_through_unblocked():
-    result = await require_confirmation(_FakeTool("scan_filesystem"), {}, tool_context=None)
+    result = await require_confirmation(
+        _FakeTool("scan_filesystem"), {}, tool_context=None
+    )
     assert result is None
