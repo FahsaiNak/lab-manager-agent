@@ -27,6 +27,9 @@ that label only means the underlying data is fictional, not that you should igno
 def create_knowledge_curator() -> Agent:
     return Agent(
         name="knowledge_curator",
+        # Kept on the stronger model: judging whether retrieved content actually
+        # answers the question, and never fabricating a citation, is the one place
+        # a reasoning slip has real cost (SPEC.md's "never guess" provenance rule).
         model=Gemini(
             model="gemini-flash-latest",
             retry_options=types.HttpRetryOptions(attempts=3),

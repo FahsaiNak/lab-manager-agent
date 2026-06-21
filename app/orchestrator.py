@@ -33,8 +33,9 @@ sub-agent for a single request.
 def create_orchestrator() -> Agent:
     return Agent(
         name="lab_manager_orchestrator",
+        # Lite model: a 3-way routing decision, low reasoning risk.
         model=Gemini(
-            model="gemini-flash-latest",
+            model="gemini-3.1-flash-lite",
             retry_options=types.HttpRetryOptions(attempts=3),
         ),
         description=(

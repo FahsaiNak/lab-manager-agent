@@ -2,7 +2,9 @@
 
 > Capstone: Kaggle "AI Agents: Intensive Vibe Coding Capstone Project"
 > Track: Concierge Agents
-> Stack: Google ADK 2.0, Gemini Pro, built/run via Antigravity IDE
+> Stack: Google ADK 2.0, Gemini (gemini-3.5-flash for Knowledge Curator,
+> gemini-3.1-flash-lite for the orchestrator/Storage Steward/News Scout),
+> built/run via Antigravity IDE
 > Deadline: 2026-07-06 23:59 PT
 
 This spec is written before any agent code. Build order follows this document.

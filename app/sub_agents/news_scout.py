@@ -29,8 +29,9 @@ Your responsibilities, run on a schedule or on-demand:
 def create_news_scout() -> Agent:
     return Agent(
         name="news_scout",
+        # Lite model: tag matching + digest formatting, low reasoning risk.
         model=Gemini(
-            model="gemini-flash-latest",
+            model="gemini-3.1-flash-lite",
             retry_options=types.HttpRetryOptions(attempts=3),
         ),
         description=(

@@ -44,8 +44,9 @@ Never invent file paths, owners, or ages — only report what the tools return.
 def create_storage_steward() -> Agent:
     return Agent(
         name="storage_steward",
+        # Lite model: tool-orchestration over deterministic logic, low reasoning risk.
         model=Gemini(
-            model="gemini-flash-latest",
+            model="gemini-3.1-flash-lite",
             retry_options=types.HttpRetryOptions(attempts=3),
         ),
         description=(

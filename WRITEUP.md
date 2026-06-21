@@ -78,8 +78,9 @@ this repo or demo — all fixture content is explicitly labeled as fictional.
 
 ## Implementation
 
-- **Stack:** Google ADK 2.0 (Python), Gemini (`gemini-flash-latest`), built and run
-  via `agents-cli` / Antigravity IDE, authenticated against a Google AI Studio API key.
+- **Stack:** Google ADK 2.0 (Python), Gemini (`gemini-3.5-flash` and
+  `gemini-3.1-flash-lite`), built and run via `agents-cli` / Antigravity IDE,
+  authenticated against a Google AI Studio API key.
 - **ADK concepts demonstrated (≥3):**
   1. **Multi-agent orchestration** — `Agent(sub_agents=[...])` with LLM-driven
      `transfer_to_agent`; the orchestrator holds no tools of its own.
@@ -94,6 +95,13 @@ this repo or demo — all fixture content is explicitly labeled as fictional.
      written *before* the code (`SPEC.md` §5), then verified with live `agents-cli
      run` smoke tests plus a deterministic `pytest` suite (16 tests) for all
      non-LLM tool/guardrail logic.
+  5. **Cost-tiered multi-model routing** — the orchestrator, Storage Steward, and
+     News Scout run on `gemini-3.1-flash-lite`: each is mechanical tool
+     orchestration over already-deterministic logic, so the reasoning risk of a
+     cheaper model is low. Knowledge Curator stays on the stronger
+     `gemini-3.5-flash` because it's the one place a reasoning slip has real cost —
+     judging whether retrieved content actually answers the question, and never
+     fabricating a citation.
 - **Verification:** all 5 Storage Steward eval cases, all 3 Knowledge Curator eval
   cases, all 3 News Scout eval cases, and all 3 orchestrator routing eval cases passed
   against live Gemini calls (not just unit tests) — see `SPEC.md` §5 for the full list

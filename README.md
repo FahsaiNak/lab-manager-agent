@@ -37,6 +37,12 @@ lab-document corpus (`sandbox/corpus/`), and a mock Slack post log
 4. **Eval-driven development** — every sub-agent and the orchestrator's routing were
    built against eval cases defined in `SPEC.md` §5 *before* being verified with live
    `agents-cli run` smoke tests.
+5. **Cost-tiered multi-model routing** — the orchestrator, Storage Steward, and News
+   Scout run on `gemini-3.1-flash-lite` (mechanical tool orchestration over
+   deterministic logic, low reasoning risk); Knowledge Curator stays on
+   `gemini-3.5-flash` because judging whether retrieved wiki content actually
+   answers the question — and never fabricating a citation — is the one place a
+   reasoning slip has real cost.
 
 ## Setup
 
