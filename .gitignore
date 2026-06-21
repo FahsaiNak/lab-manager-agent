@@ -1,5 +1,6 @@
 sandbox/cluster_fs/
 slack_mock_log.json
+wiki_index.json
 __pycache__/
 *.pyc
 .venv/
