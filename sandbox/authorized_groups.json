@@ -1,0 +1,5 @@
+{
+  "_comment": "SYNTHETIC DEMO DATA. Maps project directory -> list of usernames authorized to write into it. Used by the Storage Steward anomaly check.",
+  "plm-epistasis": ["fahsai", "advisor"],
+  "combatrl": ["fahsai", "advisor"]
+}
