@@ -3,6 +3,40 @@
 Target length: ~4-5 minutes. Every command below has already been verified live
 against real Gemini calls — this is a recording script, not untested material.
 
+## Quota budget — read this before recording
+
+The free-tier API key is capped at **20 requests/day** (`GenerateRequestsPerDayPerProjectPerModel-FreeTier`).
+Each `agents-cli run` call costs roughly `(number of tool calls in that turn) + 2`
+model requests (one to decide each tool call, one final call to produce the closing
+text). Pre-recording test runs already burned part of today's quota on the current
+key — **use a key that hasn't been touched today for the actual recording.**
+
+| Step | Scene | Model requests (worst case) |
+|---|---|---|
+| 2 | Stale-file detection | 4 |
+| 4 | Guardrail block (adversarial call only — skip the legit-confirm follow-up) | 3 |
+| 5 | Knowledge Curator — cited Q&A | 3 |
+| 6 | Knowledge Curator — refusal | 3 |
+| 7 | News digest | 5 |
+| **Core total** | | **18 / 20** |
+| 3 | Unauthorized-write alert (add back if quota allows) | +4 |
+| 4b | Legit-confirm follow-up to step 4 (add back if quota allows) | +2 |
+| 8 | Dedup rerun (add back if quota allows) | +5 |
+
+Recording plan:
+1. Run the **core** scenes (2, 4-block-only, 5, 6, 7) in a single take each — no
+   retakes, no live pre-testing on the recording key. That's 18/20, leaving a
+   2-request buffer for one small hiccup.
+2. If everything came in under budget (e.g. a step needed fewer tool calls than the
+   worst case), add back step 3 (unauthorized-write alert) first — it's the
+   strongest single demonstration of the anomaly-detection feature.
+3. Mention step 3, the legit-confirm path, and dedup verbally even if not shown live
+   — they're already verified (see `SPEC.md` §5 eval cases) and don't need
+   re-proving on camera.
+4. Do **not** pass `-v`/`--verbose` during recording — it's noisy on screen; only
+   use it if you need to debug a quota error live, which itself costs no extra quota
+   (it's a flag on the same request, not a retry).
+
 **Before recording:**
 
 ```bash
@@ -34,7 +68,7 @@ scans the synthetic cluster filesystem and flags anything older than 90 days."
 Point out in the output: the `transfer_to_agent` call (multi-agent routing), the two
 correctly-flagged stale files, the two correctly-excluded fresh ones.
 
-## 3. Storage Steward — unauthorized write alert (30s)
+## 3. Storage Steward — unauthorized write alert (30s) — OPTIONAL, add back only if quota allows (see budget above)
 
 ```bash
 agents-cli run "Check the lab filesystem for any unauthorized writes and alert the lab Slack if you find any."
@@ -63,14 +97,16 @@ instruction — intercepts it before the tool body ever runs."
 
 Point out the `"status": "blocked"` response and the agent's explanation.
 
-Then show the legitimate path:
+**OPTIONAL** (only if quota allows — see budget above): show the legitimate path:
 
 ```bash
 agents-cli run "Propose an archive plan for the stale combatrl file, then ask me to confirm before executing."
 # reply "yes, confirm" in the follow-up turn (same session-id)
 ```
 
-Narrate: "With genuine human confirmation, the same tool call succeeds."
+Narrate: "With genuine human confirmation, the same tool call succeeds." If skipping
+this live, just say it verbally: "the confirm path has been verified separately —
+this block is the half that matters for the rubric."
 
 ## 5. Knowledge Curator — cited Q&A (30s)
 
@@ -108,7 +144,7 @@ cat slack_mock_log.json
 
 Show two posts, each with title/source/relevance note.
 
-## 8. Dedup across runs (15s)
+## 8. Dedup across runs (15s) — OPTIONAL, add back only if quota allows (see budget above)
 
 ```bash
 agents-cli run "[Scheduled trigger] Run the daily news digest."
