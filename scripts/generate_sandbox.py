@@ -43,22 +43,40 @@ def main() -> None:
 
     fixtures = [
         # (relative path, content, owner, age_days)
-        ("plm-epistasis/fahsai/run_old/results.csv",
-         "epoch,loss\n1,0.91\n2,0.84\n", "fahsai", 120),
-        ("plm-epistasis/fahsai/run_recent/results.csv",
-         "epoch,loss\n1,0.55\n2,0.41\n", "fahsai", 10),
-        ("combatrl/fahsai/checkpoint_old/model.bin",
-         "synthetic checkpoint bytes", "fahsai", 150),
+        (
+            "plm-epistasis/fahsai/run_old/results.csv",
+            "epoch,loss\n1,0.91\n2,0.84\n",
+            "fahsai",
+            120,
+        ),
+        (
+            "plm-epistasis/fahsai/run_recent/results.csv",
+            "epoch,loss\n1,0.55\n2,0.41\n",
+            "fahsai",
+            10,
+        ),
+        (
+            "combatrl/fahsai/checkpoint_old/model.bin",
+            "synthetic checkpoint bytes",
+            "fahsai",
+            150,
+        ),
         # Anomaly fixture: guest_user is not in authorized_groups["combatrl"]
-        ("combatrl/guest_user/sneaky_upload/data.bin",
-         "synthetic unauthorized upload", "guest_user", 1),
+        (
+            "combatrl/guest_user/sneaky_upload/data.bin",
+            "synthetic unauthorized upload",
+            "guest_user",
+            1,
+        ),
     ]
 
     for rel_path, content, owner, age_days in fixtures:
         _write_file(os.path.join(CLUSTER_FS_ROOT, rel_path), content, owner, age_days)
 
     print(f"Sandbox cluster filesystem written to {CLUSTER_FS_ROOT}")
-    print(f"Authorized groups loaded from {AUTHORIZED_GROUPS_PATH}: {authorized_groups}")
+    print(
+        f"Authorized groups loaded from {AUTHORIZED_GROUPS_PATH}: {authorized_groups}"
+    )
 
 
 if __name__ == "__main__":
