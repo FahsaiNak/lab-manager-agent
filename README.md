@@ -1,86 +1,91 @@
-# lab-manager-ref2
+# Lab Manager Agent
 
-Simple ReAct agent
-Agent generated with `agents-cli` version `0.5.0`
+A multi-agent system that handles the recurring administrative work of a shared research
+lab: archiving stale storage and flagging unauthorized access, answering protocol/research
+questions from a lab knowledge base, and keeping the lab updated on papers matching its
+shared interests. Built for the Kaggle "AI Agents: Intensive Vibe Coding" capstone
+(Concierge Agents track) with Google's Agent Development Kit (ADK).
 
-## Project Structure
+See [`SPEC.md`](SPEC.md) for the full design spec (problem, architecture, tool contracts,
+guardrails, eval cases) — that file is the source of truth this project was built against.
+
+## Architecture
 
 ```
-lab-manager-ref2/
-├── app/         # Core agent code
-│   ├── agent.py               # Main agent logic
-│   └── app_utils/             # App utilities and helpers
-├── tests/                     # Unit, integration, and load tests
-├── GEMINI.md                  # AI-assisted development guide
-└── pyproject.toml             # Project dependencies
+lab_manager_orchestrator (root agent)
+├── storage_steward      — filesystem scans, archive proposals, anomaly alerts
+├── knowledge_curator    — wiki ingest + cited Q&A over lab documents
+└── news_scout           — interest-tag paper search + Slack digest
 ```
 
-> 💡 **Tip:** Use [Gemini CLI](https://github.com/google-gemini/gemini-cli) for AI-assisted development - project context is pre-configured in `GEMINI.md`.
+The orchestrator holds no tools itself — it routes every request to exactly one
+sub-agent via ADK's `sub_agents` + `transfer_to_agent` mechanism.
 
-## Requirements
+**Demo environment:** everything runs against a sandboxed, synthetic environment —
+a fake cluster filesystem (`sandbox/cluster_fs/`, generated at runtime), a synthetic
+lab-document corpus (`sandbox/corpus/`), and a mock Slack post log
+(`slack_mock_log.json`). No real lab data, credentials, or Slack workspace are used.
 
-Before you begin, ensure you have:
-- **uv**: Python package manager (used for all dependency management in this project) - [Install](https://docs.astral.sh/uv/getting-started/installation/) ([add packages](https://docs.astral.sh/uv/concepts/dependencies/) with `uv add <package>`)
-- **agents-cli**: Agents CLI - Install with `uv tool install google-agents-cli`
-- **Google Cloud SDK**: For GCP services - [Install](https://cloud.google.com/sdk/docs/install)
+## Key ADK concepts demonstrated
 
+1. **Multi-agent orchestration** — `Agent(sub_agents=[...])` with LLM-driven
+   `transfer_to_agent` routing (`app/orchestrator.py`).
+2. **Custom function tools** — 8 deterministic tools across the three sub-agents
+   (`app/tools.py`, `app/knowledge_tools.py`, `app/news_tools.py`).
+3. **Security guardrail via `before_tool_callback`** — blocks any destructive
+   archive execution unless a human has explicitly confirmed it (`app/guardrails.py`).
+4. **Eval-driven development** — every sub-agent and the orchestrator's routing were
+   built against eval cases defined in `SPEC.md` §5 *before* being verified with live
+   `agents-cli run` smoke tests.
 
-## Quick Start
-
-Install `agents-cli` and its skills if not already installed:
+## Setup
 
 ```bash
-uvx google-agents-cli setup
+uv sync
 ```
 
-Install required packages:
+Add a Gemini API key (Google AI Studio) to `app/.env`:
+
+```
+GOOGLE_API_KEY="your-key-here"
+```
+
+Generate the sandbox fixtures (synthetic filesystem + wiki corpus):
 
 ```bash
-agents-cli install
+uv run python scripts/generate_sandbox.py
+uv run python scripts/ingest_corpus.py
 ```
 
-Test the agent with a local web server:
+## Running
 
 ```bash
-agents-cli playground
+agents-cli run "Scan the lab filesystem and tell me which directories are stale and should be archived."
+agents-cli run "What temperature and duration should I use for NVT equilibration?"
+agents-cli run "[Scheduled trigger] Run the daily news digest."
+agents-cli playground   # interactive web UI
 ```
 
-You can also use features from the [ADK](https://adk.dev/) CLI with `uv run adk`.
-
-## Commands
-
-| Command              | Description                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------------- |
-| `agents-cli install` | Install dependencies using uv                                                         |
-| `agents-cli playground` | Launch local development environment                                                  |
-| `agents-cli lint`    | Run code quality checks                                                               |
-| `agents-cli eval`    | Evaluate agent behavior (generate, grade, analyze, and more — see `agents-cli eval --help`) |
-| `uv run pytest tests/unit tests/integration` | Run unit and integration tests                                                        |
-
-## 🛠️ Project Management
-
-| Command | What It Does |
-|---------|--------------|
-| `agents-cli scaffold enhance` | Add CI/CD pipelines and Terraform infrastructure |
-| `agents-cli infra cicd` | One-command setup of entire CI/CD pipeline + infrastructure |
-| `agents-cli scaffold upgrade` | Auto-upgrade to latest version while preserving customizations |
-
----
-
-## Development
-
-Edit your agent logic in `app/agent.py` and test with `agents-cli playground` - it auto-reloads on save.
-
-## Deployment
+## Testing
 
 ```bash
-gcloud config set project <your-project-id>
-agents-cli deploy
+uv run pytest tests/unit/ -q   # deterministic tool/guardrail logic — no LLM calls
+agents-cli eval generate && agents-cli eval grade   # LLM behavior evals
 ```
 
-To add CI/CD and Terraform, run `agents-cli scaffold enhance`.
-To set up your production infrastructure, run `agents-cli infra cicd`.
+## Project layout
 
-## Observability
-
-Built-in telemetry exports to Cloud Trace, BigQuery, and Cloud Logging.
+```
+app/
+├── agent.py               # App entrypoint — root_agent = orchestrator
+├── orchestrator.py        # Routes requests to sub-agents
+├── guardrails.py          # before_tool_callback: blocks unconfirmed archive execution
+├── tools.py                # Storage Steward tools
+├── knowledge_tools.py      # Knowledge Curator tools
+├── news_tools.py           # News Scout tools
+└── sub_agents/             # storage_steward.py, knowledge_curator.py, news_scout.py
+sandbox/                    # synthetic fixtures (cluster_fs is gitignored/generated)
+scripts/                     # generate_sandbox.py, ingest_corpus.py
+tests/unit/                  # deterministic tests for tools.py / guardrails.py
+SPEC.md                      # design spec — read this first
+```
