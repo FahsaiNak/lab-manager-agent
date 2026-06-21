@@ -101,5 +101,5 @@ this repo or demo — all fixture content is explicitly labeled as fictional.
 
 ## Links
 
-- GitHub repo: _\<add public repo URL before submitting\>_
+- GitHub repo: https://github.com/FahsaiNak/lab-manager-agent
 - Demo video: _\<add video URL before submitting\>_
