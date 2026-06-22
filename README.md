@@ -9,6 +9,10 @@ shared interests. Built for the Kaggle "AI Agents: Intensive Vibe Coding" capsto
 See [`SPEC.md`](SPEC.md) for the full design spec (problem, architecture, tool contracts,
 guardrails, eval cases) — that file is the source of truth this project was built against.
 
+## Demo video
+
+[![Lab Manager Agent demo](https://img.youtube.com/vi/nW2QL3GNiBs/maxresdefault.jpg)](https://youtu.be/nW2QL3GNiBs)
+
 ## Architecture
 
 ```
