@@ -13,10 +13,6 @@ guardrails, eval cases) — that file is the source of truth this project was bu
 
 [![Lab Manager Agent demo](https://img.youtube.com/vi/nW2QL3GNiBs/maxresdefault.jpg)](https://youtu.be/nW2QL3GNiBs)
 
-## Kaggle submission
-
-[Lab Manager Agent — Kaggle Writeup](https://kaggle.com/competitions/vibecoding-agents-capstone-project/writeups/new-writeup-1782088031644)
-
 ## Architecture
 
 ```
@@ -103,3 +99,7 @@ scripts/                     # generate_sandbox.py, ingest_corpus.py
 tests/unit/                  # deterministic tests for tools.py / guardrails.py
 SPEC.md                      # design spec — read this first
 ```
+
+## Kaggle submission
+
+[Lab Manager Agent — Kaggle Writeup](https://kaggle.com/competitions/vibecoding-agents-capstone-project/writeups/new-writeup-1782088031644)
